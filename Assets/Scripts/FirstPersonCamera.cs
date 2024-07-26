@@ -5,8 +5,8 @@ public class FirstPersonCamera : MonoBehaviour
 {
 
     // Set up the variables needed
-        public float sensX = 100.0f;
-        public float sensY = 100.0f;
+        public float sensX;
+        public float sensY;
 
         public Transform orientation;
 
