@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Forgot to mention - here is the fixed code from the last commits
 public class FirstPersonCamera : MonoBehaviour
 {
 
