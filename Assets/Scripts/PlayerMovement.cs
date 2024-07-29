@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
+
     // Initialises the necessary variables.
     public float moveSpeed;
 
@@ -16,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        // Gets the rigidbody component of the player.
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
     }
@@ -26,8 +29,9 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
-    void InputDirection()
+    void InputDirection() // Determines the direction of the player's movement.
     {
+        // Gets the input from the player.
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -38,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     void MovePlayer()
     {
         // adds force to the player in the direction of the movement input
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f * Time.deltaTime, ForceMode.Force);
+        rb.AddForce(moveDirection.normalized * moveSpeed * 100f * Time.deltaTime, ForceMode.Force); // Changed the multiplier to 100f so that the player actually moves.
     }
 
 }

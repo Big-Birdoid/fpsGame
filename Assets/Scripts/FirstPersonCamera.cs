@@ -31,8 +31,8 @@ public class FirstPersonCamera : MonoBehaviour
         xRotation -= mouseY;
         yRotation += mouseX;
 
-       // Clamp rotation to avoid flipping
-       xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // Clamp rotation to avoid flipping
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Rotate the camera
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
