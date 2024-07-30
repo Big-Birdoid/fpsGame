@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
         // Do movement stuff
         InputDirection();
         MovePlayer();
+        SpeedControl();
     }
 
     void InputDirection() // Determines the direction of the player's movement.
@@ -71,6 +72,14 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             rb.drag = 0f; // if the player is not on the ground, do no drag
+        }
+    }
+
+    void SpeedControl() // Ensures that the player does not exceed the maximum speed.
+    {
+        if (rb.velocity.magnitude > moveSpeed) // If the player's velocity is greater than the move speed.
+        {
+            rb.velocity = rb.velocity.normalized * moveSpeed; // Set the player's velocity to the move speed.
         }
     }
 
