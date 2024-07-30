@@ -570,8 +570,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23e22293dd9640b486aacde97de9e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensX: 400
-  sensY: 400
+  sensX: 800
+  sensY: 800
   orientation: {fileID: 825890412}
 --- !u!1 &1296320766
 GameObject:
@@ -585,8 +585,8 @@ GameObject:
   - component: {fileID: 1296320769}
   - component: {fileID: 1296320768}
   - component: {fileID: 1296320767}
-  m_Layer: 0
-  m_Name: Cube
+  m_Layer: 10
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -726,7 +726,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f870112870d4629abcd866f570de46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
+  moveSpeed: 10
+  playerHeight: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
   orientation: {fileID: 825890412}
 --- !u!54 &1982446452
 Rigidbody:
