@@ -726,16 +726,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f870112870d4629abcd866f570de46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
+  walkSpeed: 15
   groundDrag: 5
   jumpForce: 5
   jumpCooldown: 0.25
   airMultiplier: 0.4
   jumpKey: 32
+  crouchKey: 304
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
+  crouchSpeed: 7.5
+  crouchYScale: 0.5
   orientation: {fileID: 825890412}
 --- !u!54 &1982446452
 Rigidbody:

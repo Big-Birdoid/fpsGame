@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
     // Initialises the necessary variables.
+    [Header("Movement")]
     public float walkSpeed;
     public float groundDrag; // base ground friction
     private float moveSpeed; // max speed at a given tinme
