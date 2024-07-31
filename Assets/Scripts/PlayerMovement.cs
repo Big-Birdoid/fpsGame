@@ -4,27 +4,43 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     // Initialises the necessary variables.
-    public float moveSpeed; // max speed
+    public float walkSpeed;
     public float groundDrag; // base ground friction
+    private float moveSpeed; // max speed at a given tinme
+
+    [Header("Jumping")]
     public float jumpForce; // The force applied to the player when they jump.
     public float jumpCooldown; // time between jumps
     public float airMultiplier; // how much faster or slower the player moves in the air
-    bool readyToJump;
+    private bool readyToJump;
 
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode jumpKey;
+    public KeyCode crouchKey;
 
     [Header("Ground Detection")]
     public float playerHeight; // Used for the length of the raycast that detects the ground.
     public LayerMask whatIsGround; // Needed to know what is considered ground.
-    bool grounded; // Flags if the player is on the ground.
+    private bool grounded; // Flags if the player is on the ground.
 
-    [Header("Transforms")]
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    private float startYScale;
+
+    [Header("Other")]
     public Transform orientation; // Used to determine the direction of the player's movement.
+    public enum MovementState // using an enum will allow me to add other states later on.
+    {
+        walking,
+        air,
+        crouching
+    }
+    private MovementState movementState;
 
     // wasd input
-    float horizontalInput;
-    float verticalInput;
+    private float horizontalInput;
+    private float verticalInput;
 
     Vector3 moveDirection; // final move direction
 
@@ -36,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         readyToJump = true;
+        startYScale = transform.localScale.y; // default y scale
     }
 
     void Update()
@@ -44,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerInput();
         MovePlayer();
         SpeedControl();
+        StateHandler(); // handles scale and speed of the player
     }
 
     void PlayerInput() // Handles stuff to do with player input.
@@ -52,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        // Jumping
+        // Jump action
         if (Input.GetKeyDown(jumpKey) && grounded && readyToJump)
         {
             Jump();
@@ -91,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (grounded && moveDirection.magnitude != 0) // If the player is on the ground and pressing a movement key.
         {
-            rb.drag = groundDrag * 0.1f; // Apply the ground drag.
+            rb.drag = groundDrag * 0.1f; // Apply reduced drag.
         }
         else
         {
@@ -120,6 +138,32 @@ public class PlayerMovement : MonoBehaviour
     void ResetJump()
     {
         readyToJump = true;
+    }
+
+    void StateHandler() // scales the player height and movement speed appropriately
+    {
+        if (grounded && Input.GetKey(crouchKey)) // crouching
+        {
+            movementState = MovementState.crouching;
+            moveSpeed = crouchSpeed;
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z); // scales the player down
+
+            if (Input.GetKeyDown(crouchKey)) // only add the downward force upon the key press, as opposed to continually
+            {
+                rb.AddForce(Vector3.down * 5f, ForceMode.Impulse); // stops player from floating
+            }
+        }
+        else if (grounded) // walking
+        {
+            movementState = MovementState.walking;
+            moveSpeed = walkSpeed;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
+        }
+        else // air
+        {
+            movementState = MovementState.air;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
+        }
     }
 
 }
