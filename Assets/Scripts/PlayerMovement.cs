@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         StateHandler(); // handles scale and speed of the player
     }
 
-    void PlayerInput() // Handles stuff to do with player input.
+    private void PlayerInput() // Handles stuff to do with player input.
     {
         // Gets the input from the player.
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void MovePlayer() // Handles the movement of the player.
+    private void MovePlayer() // Handles the movement of the player.
     {
         //Calculate move direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -97,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         // Also I am aware that I'm checking if the player is grounded twice. If performance becomes a problem I will fix it later.
     }
 
-    void ApplyDrag() // Calculates the drag to be applied based on the player's velocity. (totally realistic physics going on here!)
+    private void ApplyDrag() // Calculates the drag to be applied based on the player's velocity. (totally realistic physics going on here!)
     {
         // Check for ground with a raycast    
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void SpeedControl() // Ensures that the player does not exceed the maximum speed.
+    private void SpeedControl() // Ensures that the player does not exceed the maximum speed.
     {
         if (rb.velocity.magnitude > moveSpeed) // If the player's velocity is greater than the move speed.
         {
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Jump()
+    private void Jump()
     {
         readyToJump = false;
 
@@ -135,12 +135,12 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse); // Apply the jump force.
     }
 
-    void ResetJump()
+    private void ResetJump()
     {
         readyToJump = true;
     }
 
-    void StateHandler() // scales the player height and movement speed appropriately
+    private void StateHandler() // scales the player height and movement speed appropriately
     {
         if (grounded && Input.GetKey(crouchKey)) // crouching
         {
