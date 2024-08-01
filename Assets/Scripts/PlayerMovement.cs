@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         StateHandler(); // handles scale and speed of the player
 
         Debug.Log(OnSlope());
+        Debug.DrawRay(transform.position, moveDirection * 100f, Color.red);
     }
 
     private void PlayerInput() // Handles stuff to do with player input.
@@ -89,6 +90,11 @@ public class PlayerMovement : MonoBehaviour
     {
         //Calculate move direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        if (OnSlope())
+        {
+            moveDirection = SlopeMove(moveDirection, slopeHit);
+        }
 
         // adds force to the player in the direction of the movement input
         if (grounded)
@@ -183,6 +189,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private static Vector3 SlopeMove(Vector3 direction, RaycastHit slopeHitRay)
+    {
+        float slopeAngle = Vector3.Angle(slopeHitRay.normal, Vector3.up);
+    
+        // Rotate the direction vector vertically by the slope angle
+        direction = Quaternion.Euler(-slopeAngle, 0f, 0f) * direction;
+    
+        return direction;
     }
 
 }
