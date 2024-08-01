@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Slope Detection")]
     public float maxSlopeAngle; // The maximum angle that the player can walk on.
     private RaycastHit slopeHit;
+    private float slopeMultiplier;
+    private float slopeAngle;
 
 
     [Header("Crouching")]
@@ -68,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         SpeedControl();
         StateHandler(); // handles scale and speed of the player
 
-        Debug.Log(OnSlope());
+        Debug.Log($"onslope = {OnSlope()}, grounded = {grounded}, slopeMultiplier = {slopeMultiplier}");
         Debug.DrawRay(transform.position, moveDirection * 100f, Color.red);
     }
 
@@ -94,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
         if (OnSlope())
         {
             moveDirection = SlopeMove(moveDirection, slopeHit);
+            grounded = true;
         }
 
         // adds force to the player in the direction of the movement input
@@ -166,6 +169,14 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(Vector3.down * 5f, ForceMode.Impulse); // stops player from floating
             }
         }
+        else if (OnSlope()) // walking on slope
+        {
+            movementState = MovementState.walking;
+            slopeAngle = Vector3.Angle(slopeHit.normal, Vector3.up);
+            slopeMultiplier = Mathf.Lerp(1f, 0f, slopeAngle / maxSlopeAngle);
+            moveSpeed = walkSpeed * slopeMultiplier;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes
+        }
         else if (grounded) // walking
         {
             movementState = MovementState.walking;
@@ -181,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.2f, whatIsGround))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.5f, whatIsGround))
         {
             if (slopeHit.normal != Vector3.up)
             {
