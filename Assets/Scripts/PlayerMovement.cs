@@ -23,6 +23,11 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround; // Needed to know what is considered ground.
     private bool grounded; // Flags if the player is on the ground.
 
+    [Header("Slope Detection")]
+    public float maxSlopeAngle; // The maximum angle that the player can walk on.
+    private RaycastHit slopeHit;
+
+
     [Header("Crouching")]
     public float crouchSpeed;
     public float crouchYScale;
@@ -62,6 +67,8 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         SpeedControl();
         StateHandler(); // handles scale and speed of the player
+
+        Debug.Log(OnSlope());
     }
 
     private void PlayerInput() // Handles stuff to do with player input.
@@ -164,6 +171,18 @@ public class PlayerMovement : MonoBehaviour
             movementState = MovementState.air;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
         }
+    }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.2f, whatIsGround))
+        {
+            if (slopeHit.normal != Vector3.up)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
