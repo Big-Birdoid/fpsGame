@@ -41,7 +41,8 @@ public class PlayerMovement : MonoBehaviour
     {
         walking,
         air,
-        crouching
+        crouching,
+        onSlope
     }
     private MovementState movementState;
 
@@ -171,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (OnSlope()) // walking on slope
         {
-            movementState = MovementState.walking;
+            movementState = MovementState.onSlope;
             slopeAngle = Vector3.Angle(slopeHit.normal, Vector3.up);
             slopeMultiplier = Mathf.Lerp(1f, 0f, slopeAngle / maxSlopeAngle);
             moveSpeed = walkSpeed * slopeMultiplier;
