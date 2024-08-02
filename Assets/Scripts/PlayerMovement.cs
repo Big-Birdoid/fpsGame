@@ -70,9 +70,6 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         SpeedControl();
         StateHandler(); // handles scale and speed of the player
-
-        Debug.Log($"onslope = {OnSlope()}, grounded = {grounded}, slopeMultiplier = {slopeMultiplier}, slopeangle = {slopeAngle}");
-        Debug.DrawRay(transform.position, moveDirection * 100f, Color.red);
     }
 
     private void PlayerInput() // Handles stuff to do with player input.
