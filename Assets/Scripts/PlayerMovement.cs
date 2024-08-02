@@ -25,9 +25,9 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Slope Detection")]
     public float maxSlopeAngle; // The maximum angle that the player can walk on.
-    private RaycastHit slopeHit;
-    private float slopeMultiplier;
-    private float slopeAngle;
+    private RaycastHit slopeHit; // Used to store the information about the slope that the player is on.
+    private float slopeMultiplier; // used to slow down the player on slopes
+    private float slopeAngle; // calculated slope angle
 
 
     [Header("Crouching")]
@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
         SpeedControl();
         StateHandler(); // handles scale and speed of the player
 
-        Debug.Log($"onslope = {OnSlope()}, grounded = {grounded}, slopeMultiplier = {slopeMultiplier}");
+        Debug.Log($"onslope = {OnSlope()}, grounded = {grounded}, slopeMultiplier = {slopeMultiplier}, slopeangle = {slopeAngle}");
         Debug.DrawRay(transform.position, moveDirection * 100f, Color.red);
     }
 
@@ -96,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (OnSlope())
         {
+            slopeAngle = Vector3.Angle(slopeHit.normal, Vector3.up);
             moveDirection = SlopeMove(moveDirection, slopeHit);
             grounded = true;
         }
@@ -117,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
     private void ApplyDrag() // Calculates the drag to be applied based on the player's velocity. (totally realistic physics going on here!)
     {
         // Check for ground with a raycast    
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
         // handle drag
         if (grounded && moveDirection.magnitude == 0 && rb.velocity.magnitude != 0) // If the player is on the ground, not pressing a movement key, and still has velocity.
@@ -164,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
             movementState = MovementState.crouching;
             moveSpeed = crouchSpeed;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z); // scales the player down
+            rb.useGravity = true; // stops player from floating
 
             if (Input.GetKeyDown(crouchKey)) // only add the downward force upon the key press, as opposed to continually
             {
@@ -173,27 +175,29 @@ public class PlayerMovement : MonoBehaviour
         else if (OnSlope()) // walking on slope
         {
             movementState = MovementState.onSlope;
-            slopeAngle = Vector3.Angle(slopeHit.normal, Vector3.up);
-            slopeMultiplier = Mathf.Lerp(1f, 0f, slopeAngle / maxSlopeAngle);
+            slopeMultiplier = Mathf.Lerp(1f, 0f, slopeAngle / maxSlopeAngle); // greater slope angle leads to slower movement (linearly)
             moveSpeed = walkSpeed * slopeMultiplier;
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
+            rb.useGravity = false; // stops player from slipping down slopes
         }
         else if (grounded) // walking
         {
             movementState = MovementState.walking;
             moveSpeed = walkSpeed;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
+            rb.useGravity = true; // stops player from floating
         }
         else // air
         {
             movementState = MovementState.air;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
+            rb.useGravity = true; // stops player from floating
         }
     }
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.5f, whatIsGround))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, whatIsGround))
         {
             if (slopeHit.normal != Vector3.up)
             {
@@ -203,13 +207,14 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private static Vector3 SlopeMove(Vector3 direction, RaycastHit slopeHitRay)
+    private Vector3 SlopeMove(Vector3 direction, RaycastHit slopeHitRay)
     {
-        float slopeAngle = Vector3.Angle(slopeHitRay.normal, Vector3.up);
-    
-        // Rotate the direction vector vertically by the slope angle
-        direction = Quaternion.Euler(-slopeAngle, 0f, 0f) * direction;
-    
+        // Get the rotation needed to align the slope normal with the player's up direction
+        Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHitRay.normal);
+
+        // Rotate the direction vector by the slope rotation
+        direction = slopeRotation * direction;
+
         return direction;
     }
 
