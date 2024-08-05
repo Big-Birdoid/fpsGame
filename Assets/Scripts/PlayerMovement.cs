@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     protected Vector3 moveDirection; // final move direction
 
-    public Rigidbody rb; // physics
+    protected Rigidbody rb; // physics
 
     void Start()
     {
