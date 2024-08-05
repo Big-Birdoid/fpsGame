@@ -952,7 +952,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
-  maxSlopeAngle: 60
+  maxSlopeAngle: 90
   crouchSpeed: 7.5
   crouchYScale: 0.5
   orientation: {fileID: 825890412}

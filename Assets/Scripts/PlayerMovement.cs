@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         crouching,
         onSlope
     }
-    private MovementState movementState;
+    public MovementState movementState;
 
     // wasd input
     private float horizontalInput;
