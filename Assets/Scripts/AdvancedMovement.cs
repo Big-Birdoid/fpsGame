@@ -1,7 +1,6 @@
 using UnityEngine;
 
-// inherrit from PlayerMovement to get access to the variables and methods
-public class AdvancedMovement : PlayerMovement
+public class AdvancedMovement : MonoBehaviour
 {
     void Start()
     {
