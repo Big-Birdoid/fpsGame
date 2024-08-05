@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed;
     public float groundDrag; // base ground friction
     private float moveSpeed; // max speed at a given tinme
+    private AdvancedMovement am;
 
     [Header("Jumping")]
     public float jumpForce; // The force applied to the player when they jump.
@@ -42,7 +43,8 @@ public class PlayerMovement : MonoBehaviour
         walking,
         air,
         crouching,
-        onSlope
+        onSlope,
+        sliding
     }
     private MovementState movementState;
 
@@ -134,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpeedControl() // Ensures that the player does not exceed the maximum speed.
     {
-        if (rb.velocity.magnitude > moveSpeed) // If the player's velocity is greater than the move speed.
+        if (rb.velocity.magnitude > moveSpeed && am.GetMovementState() != MovementState.sliding) // If the player's velocity is greater than the move speed.
         {
             rb.velocity = rb.velocity.normalized * moveSpeed; // Set the player's velocity to the move speed.
         }
@@ -215,4 +217,14 @@ public class PlayerMovement : MonoBehaviour
         return direction;
     }
 
+    // Getters
+    public MovementState GetMovementState()
+    {
+        return movementState;
+    }
+
+    public Vector3 GetInputDirection()
+    {
+        return moveDirection;
+    }
 }
