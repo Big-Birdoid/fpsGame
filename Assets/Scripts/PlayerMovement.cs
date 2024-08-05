@@ -227,4 +227,64 @@ public class PlayerMovement : MonoBehaviour
     {
         return moveDirection;
     }
+
+    public bool GetGrounded()
+    {
+        return grounded;
+    }
+
+    public float GetSlopeAngle()
+    {
+        return slopeAngle;
+    }
+
+    public RaycastHit GetSlopeHit()
+    {
+        return slopeHit;
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public float GetJumpForce()
+    {
+        return jumpForce;
+    }
+
+    public float GetJumpCooldown()
+    {
+        return jumpCooldown;
+    }
+
+    public float GetAirMultiplier()
+    {
+        return airMultiplier;
+    }
+
+    public float GetCrouchSpeed()
+    {
+        return crouchSpeed;
+    }
+
+    public float GetCrouchYScale()
+    {
+        return crouchYScale;
+    }
+
+    public float GetStartYScale()
+    {
+        return startYScale;
+    }
+
+    public float GetSlopeMultiplier()
+    {
+        return slopeMultiplier;
+    }
+
+    public float GetGroundDrag()
+    {
+        return groundDrag;
+    }
 }
