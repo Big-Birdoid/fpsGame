@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AdvancedMovement : MonoBehaviour
+// inherrit from PlayerMovement to get access to the variables and methods
+public class AdvancedMovement : PlayerMovement
 {
-    // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
