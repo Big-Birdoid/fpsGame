@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
         readyToJump = true;
         startYScale = transform.localScale.y; // default y scale
+        am = GetComponent<AdvancedMovement>();
     }
 
     void Update()
@@ -174,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
         else if (OnSlope()) // walking on slope
         {
             movementState = MovementState.onSlope;
-            slopeMultiplier = Mathf.Lerp(1f, 0f, slopeAngle / maxSlopeAngle); // greater slope angle leads to slower movement (linearly)
+            slopeMultiplier = Mathf.Lerp(1f, 0.5f, slopeAngle / maxSlopeAngle); // greater slope angle leads to slower movement (linearly)
             moveSpeed = walkSpeed * slopeMultiplier;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z); // fixes permanent crouching
             rb.useGravity = false; // stops player from slipping down slopes
@@ -286,5 +287,10 @@ public class PlayerMovement : MonoBehaviour
     public float GetGroundDrag()
     {
         return groundDrag;
+    }
+
+    public bool GetOnSlope()
+    {
+        return OnSlope();
     }
 }

@@ -41,7 +41,7 @@ public class AdvancedMovement : MonoBehaviour
         inputDirection = pm.GetInputDirection();
 
         // Initiate slide
-        if (Input.GetKeyDown(slideKey) && (inputDirection.magnitude != 0))
+        if (Input.GetKeyDown(slideKey) && inputDirection.magnitude != 0 && pm.GetGrounded())
         {
             StartSlide();
         }
@@ -62,7 +62,11 @@ public class AdvancedMovement : MonoBehaviour
         sliding = true;
         movementState = PlayerMovement.MovementState.sliding; // makes the speed limiter work as intended
 
-        playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z); // scales the player down
+        if (pm.GetMovementState() != PlayerMovement.MovementState.crouching) // if the player is not already scaled down
+        {
+            playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z); // scales the player down
+        }
+        
         rb.AddForce(Vector3.down * 5f, ForceMode.Impulse); // stop the player from floating
 
         slideTimer = maxSlideTime;
@@ -72,9 +76,12 @@ public class AdvancedMovement : MonoBehaviour
     {
         rb.AddForce(inputDirection * slideForce * Time.deltaTime, ForceMode.Force); // slide in the direction of the input
 
-        slideTimer -= Time.deltaTime; // decrease the slide timer
+        if (!pm.GetOnSlope()) // i want infinite slope sliding
+        {
+            slideTimer -= Time.deltaTime; // decrease the slide timer
+        }
 
-        if (slideTimer <= 0)
+        if (slideTimer == 0 && pm.GetGrounded()) // if the player is grounded and the tyimer has run out.
         {
             StopSlide();
         }
