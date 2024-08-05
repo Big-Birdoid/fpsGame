@@ -19,9 +19,6 @@ public class AdvancedMovement : MonoBehaviour
 
    
     private KeyCode slideKey;
-    private float horizontalInput;
-    private float verticalInput;
-    
 
     private bool sliding;
     private PlayerMovement.MovementState movementState;
