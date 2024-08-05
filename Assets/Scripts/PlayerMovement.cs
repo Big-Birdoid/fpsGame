@@ -6,13 +6,13 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     public float walkSpeed;
     public float groundDrag; // base ground friction
-    protected float moveSpeed; // max speed at a given tinme
+    private float moveSpeed; // max speed at a given tinme
 
     [Header("Jumping")]
     public float jumpForce; // The force applied to the player when they jump.
     public float jumpCooldown; // time between jumps
     public float airMultiplier; // how much faster or slower the player moves in the air
-    protected bool readyToJump;
+    private bool readyToJump;
 
     [Header("Keybinds")]
     public KeyCode jumpKey;
@@ -21,19 +21,19 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Detection")]
     public float playerHeight; // Used for the length of the raycast that detects the ground.
     public LayerMask whatIsGround; // Needed to know what is considered ground.
-    protected bool grounded; // Flags if the player is on the ground.
+    private bool grounded; // Flags if the player is on the ground.
 
     [Header("Slope Detection")]
     public float maxSlopeAngle; // The maximum angle that the player can walk on.
-    protected RaycastHit slopeHit; // Used to store the information about the slope that the player is on.
-    protected float slopeMultiplier; // used to slow down the player on slopes
-    protected float slopeAngle; // calculated slope angle
+    private RaycastHit slopeHit; // Used to store the information about the slope that the player is on.
+    private float slopeMultiplier; // used to slow down the player on slopes
+    private float slopeAngle; // calculated slope angle
 
 
     [Header("Crouching")]
     public float crouchSpeed;
     public float crouchYScale;
-    protected float startYScale;
+    private float startYScale;
 
     [Header("Other")]
     public Transform orientation; // Used to determine the direction of the player's movement.
@@ -44,15 +44,15 @@ public class PlayerMovement : MonoBehaviour
         crouching,
         onSlope
     }
-    protected MovementState movementState;
+    private MovementState movementState;
 
     // wasd input
-    protected float horizontalInput;
-    protected float verticalInput;
+    private float horizontalInput;
+    private float verticalInput;
 
-    protected Vector3 moveDirection; // final move direction
+    private Vector3 moveDirection; // final move direction
 
-    protected Rigidbody rb; // physics
+    private Rigidbody rb; // physics
 
     void Start()
     {
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
         StateHandler(); // handles scale and speed of the player
     }
 
-    protected void PlayerInput() // Handles stuff to do with player input.
+    private void PlayerInput() // Handles stuff to do with player input.
     {
         // Gets the input from the player.
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -86,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    protected void MovePlayer() // Handles the movement of the player.
+    private void MovePlayer() // Handles the movement of the player.
     {
         //Calculate move direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -112,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
         // Also I am aware that I'm checking if the player is grounded twice. If performance becomes a problem I will fix it later.
     }
 
-    protected void ApplyDrag() // Calculates the drag to be applied based on the player's velocity. (totally realistic physics going on here!)
+    private void ApplyDrag() // Calculates the drag to be applied based on the player's velocity. (totally realistic physics going on here!)
     {
         // Check for ground with a raycast    
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
@@ -132,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    protected void SpeedControl() // Ensures that the player does not exceed the maximum speed.
+    private void SpeedControl() // Ensures that the player does not exceed the maximum speed.
     {
         if (rb.velocity.magnitude > moveSpeed) // If the player's velocity is greater than the move speed.
         {
@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    protected void Jump()
+    private void Jump()
     {
         readyToJump = false;
 
@@ -150,12 +150,12 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse); // Apply the jump force.
     }
 
-    protected void ResetJump()
+    private void ResetJump()
     {
         readyToJump = true;
     }
 
-    protected void StateHandler() // scales the player height and movement speed appropriately
+    private void StateHandler() // scales the player height and movement speed appropriately
     {
         if (grounded && Input.GetKey(crouchKey)) // crouching
         {
@@ -192,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    protected bool OnSlope()
+    private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, whatIsGround))
         {
@@ -204,7 +204,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    protected Vector3 SlopeMove(Vector3 direction, RaycastHit slopeHitRay)
+    private Vector3 SlopeMove(Vector3 direction, RaycastHit slopeHitRay)
     {
         // Get the rotation needed to align the slope normal with the player's up direction
         Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHitRay.normal);
