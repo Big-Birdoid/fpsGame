@@ -3,42 +3,44 @@ using UnityEngine;
 public class AdvancedMovement : MonoBehaviour
 {
     [Header("References")]
-    public Transform orientation;
-    public Transform playerObj;
-    private Rigidbody rb;
-    private PlayerMovement pm;
+    public Transform orientation; // reference to the orientation object
+    public Transform playerObj; // reference to the player object
+    private Rigidbody rb; // reference to the rigidbody
+    private PlayerMovement pm; // reference to the PlayerMovement script (used composition instead of inheritance) 
 
     [Header("Sliding")]
-    public float slideForce;
-    public float maxSlideTime;
-    private float slideTimer;
+    public float slideForce; // the force applied to the player when sliding
+    public float maxSlideTime; // the maximum time the player can slide
+    private float slideTimer; // counts down from maxSlideTime to 0
 
-    public float slideYScale;
-    private float startYScale;
+    private float slideYScale; // the scale of the player when sliding (same as crouching)
+    private float startYScale; // the scale of the player when not sliding
 
    
-    private KeyCode slideKey;
+    private KeyCode slideKey; // the key used to slide (same as crouch key)
 
-    private bool sliding;
-    private PlayerMovement.MovementState movementState;
-    private Vector3 inputDirection;
+    private bool sliding; // is the player sliding?
+    private PlayerMovement.MovementState movementState; // the current movement state of the player
+    private Vector3 inputDirection; // the input direction of the player
 
     
     void Start()
     {
+        // Assigns references to the variables
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovement>();
 
         slideKey = pm.crouchKey;
         startYScale = playerObj.localScale.y;
 
+        slideYScale = pm.crouchYScale;
+
         movementState = pm.GetMovementState();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        inputDirection = pm.GetInputDirection();
+        inputDirection = pm.GetInputDirection(); // get the input direction from PlayerMovement.cs
 
         // Initiate slide
         if (Input.GetKeyDown(slideKey) && inputDirection.magnitude != 0 && pm.GetGrounded())
@@ -94,7 +96,8 @@ public class AdvancedMovement : MonoBehaviour
         playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z); // scales the player back up
     }
 
-    public PlayerMovement.MovementState GetMovementState()
+    // Getters
+    public PlayerMovement.MovementState GetMovementState() // used in PlayerMovement.cs
     {
         return movementState;
     }
