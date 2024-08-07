@@ -57,6 +57,7 @@ public class AdvancedMovement : MonoBehaviour
         sliding = true; // the player is now sliding
         movementState = PlayerMovement.MovementState.sliding; // makes the speed limiter work as intended
         slideTimer = maxSlideTime; // reset the slide timer
+        rb.AddForce(inputDirection * slideForce * 10f * Time.deltaTime, ForceMode.Impulse); // sliding is way cooler now!
     }
 
     private void SlidingMovement()
