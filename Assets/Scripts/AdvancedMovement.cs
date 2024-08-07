@@ -13,10 +13,6 @@ public class AdvancedMovement : MonoBehaviour
     public float maxSlideTime; // the maximum time the player can slide
     private float slideTimer; // counts down from maxSlideTime to 0
 
-    private float slideYScale; // the scale of the player when sliding (same as crouching)
-    private float startYScale; // the scale of the player when not sliding
-
-   
     private KeyCode slideKey; // the key used to slide (same as crouch key)
 
     private bool sliding; // is the player sliding?
@@ -31,9 +27,6 @@ public class AdvancedMovement : MonoBehaviour
         pm = GetComponent<PlayerMovement>();
 
         slideKey = pm.crouchKey;
-        startYScale = playerObj.localScale.y;
-
-        slideYScale = pm.crouchYScale;
 
         movementState = pm.GetMovementState();
     }
@@ -61,17 +54,9 @@ public class AdvancedMovement : MonoBehaviour
 
     private void StartSlide()
     {
-        sliding = true;
+        sliding = true; // the player is now sliding
         movementState = PlayerMovement.MovementState.sliding; // makes the speed limiter work as intended
-
-        if (pm.GetMovementState() != PlayerMovement.MovementState.crouching) // if the player is not already scaled down
-        {
-            playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z); // scales the player down
-        }
-        
-        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse); // stop the player from floating
-
-        slideTimer = maxSlideTime;
+        slideTimer = maxSlideTime; // reset the slide timer
     }
 
     private void SlidingMovement()
@@ -83,7 +68,7 @@ public class AdvancedMovement : MonoBehaviour
             slideTimer -= Time.deltaTime; // decrease the slide timer
         }
 
-        if (slideTimer == 0 && pm.GetGrounded()) // if the player is grounded and the tyimer has run out.
+        if (slideTimer <= 0 && pm.GetGrounded()) // if the player is grounded and the tyimer has run out.
         {
             StopSlide();
         }
@@ -91,9 +76,8 @@ public class AdvancedMovement : MonoBehaviour
 
     private void StopSlide()
     {
-        sliding = false;
-        movementState = PlayerMovement.MovementState.walking;
-        playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z); // scales the player back up
+        sliding = false; // the player is no longer sliding
+        movementState = PlayerMovement.MovementState.walking; // this helps with the speed limiter in PlayerMovement.cs
     }
 
     // Getters

@@ -139,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb.velocity.magnitude > moveSpeed && am.GetMovementState() != MovementState.sliding) // If the player's velocity is greater than the move speed.
         {
-            rb.velocity = rb.velocity.normalized * moveSpeed; // Set the player's velocity to the move speed.
+            rb.velocity = Vector3.Lerp(rb.velocity, rb.velocity.normalized * moveSpeed, Time.deltaTime); // Lerp the player's velocity to the move speed.
         }
     }
 
