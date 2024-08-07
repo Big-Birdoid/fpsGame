@@ -44,7 +44,8 @@ public class PlayerMovement : MonoBehaviour
         air,
         crouching,
         onSlope,
-        sliding
+        sliding,
+        wallRunning
     }
     private MovementState movementState;
 
