@@ -225,7 +225,7 @@ public class PlayerMovement : MonoBehaviour
         return movementState;
     }
 
-    public Vector3 GetInputDirection()
+    public Vector3 GetMoveDirection()
     {
         return moveDirection;
     }
@@ -293,5 +293,15 @@ public class PlayerMovement : MonoBehaviour
     public bool GetOnSlope()
     {
         return OnSlope();
+    }
+
+    public float GetHorizontalInput()
+    {
+        return horizontalInput;
+    }
+
+    public float GetVerticalInput()
+    {
+        return verticalInput;
     }
 }
