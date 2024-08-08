@@ -326,4 +326,10 @@ public class PlayerMovement : MonoBehaviour
     {
         return verticalInput;
     }
+
+    // Setters
+    public void SetMoveDirection(Vector3 direction)
+    {
+        moveDirection = direction;
+    }
 }

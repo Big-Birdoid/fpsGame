@@ -139,6 +139,8 @@ public class AdvancedMovement : MonoBehaviour
 
     private void WallRunMovement()
     {   
+        pm.SetMoveDirection(Vector3.zero); // stop MovePlayer from messing stuff up
+
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); // no vertical velocity
 
         Vector3 wallNormal = leftWall ? leftWallHit.normal : rightWallHit.normal;
