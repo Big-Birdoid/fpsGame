@@ -100,7 +100,7 @@ public class AdvancedMovement : MonoBehaviour
 
     private void SlidingMovement()
     {   
-        if (!pm.GetOnSlope()) // i want infinite, crazy fast slope sliding
+        if (!pm.GetOnSlope() && pm.GetGrounded()) // i want infinite, crazy fast slope sliding
         {
             slideTimer -= Time.deltaTime; // decrease the slide timer
         }
@@ -165,5 +165,10 @@ public class AdvancedMovement : MonoBehaviour
     public PlayerMovement.MovementState GetMovementState() // used in PlayerMovement.cs
     {
         return movementState;
+    }
+
+    public Vector3 GetWallNormal()
+    {
+        return leftWall ? leftWallHit.normal : rightWallHit.normal;
     }
 }

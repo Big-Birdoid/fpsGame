@@ -74,6 +74,14 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         SpeedControl();
         StateHandler(); // handles scale and speed of the player
+
+        // Debugging
+        Vector3 jumpdir = am.GetWallNormal() + (Vector3.up * 0.707f); // 45 degrees is approximately 0.707 in both x and z axes
+
+        Debug.DrawRay(transform.position, am.GetWallNormal() * 100f, Color.red);
+        Debug.DrawRay(transform.position,  jumpdir * 100f, Color.green);
+
+        Debug.Log(am.GetMovementState());
     }
 
     private void PlayerInput() // Handles stuff to do with player input.
@@ -83,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // Jump action
-        if (Input.GetKeyDown(jumpKey) && grounded && readyToJump)
+        if (Input.GetKeyDown(jumpKey) && (grounded || am.GetMovementState() == MovementState.wallRunning) && readyToJump)
         {
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -148,10 +156,24 @@ public class PlayerMovement : MonoBehaviour
     {
         readyToJump = false;
 
-        // reset y velocity to ensure consistent jump height
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        if (movementState == MovementState.wallRunning)
+        {
+            // get wall normal + 45* up
+            Vector3 wallNormal = am.GetWallNormal();
+            // Calculate the jump direction
+            Vector3 jumpDirection = wallNormal + (Vector3.up * 0.707f); // 45 degrees is approximately 0.707 in both x and z axes
 
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse); // Apply the jump force.
+            // Apply the jump force in the calculated direction
+            rb.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
+        }
+        else
+        {
+            // reset y velocity to ensure consistent jump height
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse); // Apply the jump force.
+        }
+
     }
 
     private void ResetJump()
